@@ -8,9 +8,9 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-public class MusicService extends Service {
+public class Play_music extends Service {
 
-    private MediaPlayer background;
+    private MediaPlayer playing;
 
     @Nullable
     @Override
@@ -20,9 +20,9 @@ public class MusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        background = MediaPlayer.create(this, R.raw.background_music);
-        background.setLooping(true);
-        background.start();
+        playing = MediaPlayer.create(this, R.raw.playing_music);
+        playing.setLooping(true);
+        playing.start();
         return START_STICKY;
     }
 
@@ -30,6 +30,6 @@ public class MusicService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        background.stop();
+        playing.stop();
     }
 }

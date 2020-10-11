@@ -13,7 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Menu extends AppCompatActivity implements View.OnClickListener {
-    int musicCounter = 1;
+    public static int musicCounter = 1;
     Intent bgm;
     Button singleStart;
     Button doubleStart;
@@ -21,23 +21,13 @@ public class Menu extends AppCompatActivity implements View.OnClickListener {
     ImageButton goToSetting;
     ImageButton musicSetting;
     private String userID = null;
-    private AlertDialog.Builder dialogueBuilder;
     private AlertDialog dialog;
-
-    //This part is for the setting pop up
-    private EditText newID;
-    private Button settingPopUpCancel, settingPopUpSave;
-    private TextView showID;
-    private Menu menu;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
-
-        //Start background music
-        startService(new Intent(this, MusicService.class));
 
 
         //Main menu button choices
@@ -59,6 +49,14 @@ public class Menu extends AppCompatActivity implements View.OnClickListener {
 
     }
 
+    //This part is for the setting pop up
+    private EditText newID;
+
+    // Pause the music when exiting app
+    public static int getMusicCounter() {
+        return musicCounter;
+    }
+
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.startGame1) {
@@ -74,26 +72,27 @@ public class Menu extends AppCompatActivity implements View.OnClickListener {
             createNewIDDialogue(this);
         } else if (view.getId() == R.id.musicSetting) {
             if (musicCounter == 1) {
-                stopService(new Intent(this, MusicService.class));
+                stopService(new Intent(this, Menu_music.class));
                 musicSetting.setBackgroundResource(R.drawable.setting_music2);
                 musicCounter = 0;
             } else if (musicCounter == 0) {
-                startService(new Intent(this, MusicService.class));
+                startService(new Intent(this, Menu_music.class));
                 musicSetting.setBackgroundResource(R.drawable.setting_music);
                 musicCounter = 1;
             }
         }
 
     }
+    // End of setting pop up
 
     @SuppressLint("SetTextI18n")
     public void createNewIDDialogue(Menu menu) {
-        dialogueBuilder = new AlertDialog.Builder(this.menu);
-        final View IDPopUpView = this.menu.getLayoutInflater().inflate(R.layout.popup, null);
+        AlertDialog.Builder dialogueBuilder = new AlertDialog.Builder(this);
+        final View IDPopUpView = getLayoutInflater().inflate(R.layout.popup, null);
         newID = IDPopUpView.findViewById(R.id.enterNewID);
-        settingPopUpCancel = IDPopUpView.findViewById(R.id.cancelSetting);
-        settingPopUpSave = IDPopUpView.findViewById(R.id.saveSetting);
-        showID = IDPopUpView.findViewById(R.id.showCurrentID);
+        Button settingPopUpCancel = IDPopUpView.findViewById(R.id.cancelSetting);
+        Button settingPopUpSave = IDPopUpView.findViewById(R.id.saveSetting);
+        TextView showID = IDPopUpView.findViewById(R.id.showCurrentID);
         showID.setText("ID: " + userID);
 
         dialogueBuilder.setView(IDPopUpView);
@@ -115,23 +114,21 @@ public class Menu extends AppCompatActivity implements View.OnClickListener {
             }
         });
     }
-    // End of setting pop up
 
-    // Pause the music when exiting app
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         if (musicCounter == 1) {
-            stopService(new Intent(this, MusicService.class));
+            stopService(new Intent(this, Menu_music.class));
         }
     }
 
+    @Override
     protected void onResume() {
         if (musicCounter == 1) {
-            startService(new Intent(this, MusicService.class));
+            startService(new Intent(this, Menu_music.class));
         }
         super.onResume();
     }
-
 
 }

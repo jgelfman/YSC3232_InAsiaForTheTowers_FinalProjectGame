@@ -1,6 +1,7 @@
 package com.example.inasiaforthetowers;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,9 @@ public class HighScore extends AppCompatActivity implements View.OnClickListener
 
         Button returnMain = findViewById(R.id.returnMain);
         returnMain.setOnClickListener(this);
+        setContentView(R.layout.activity_play_single);
+
+
     }
 
 
@@ -45,4 +49,21 @@ public class HighScore extends AppCompatActivity implements View.OnClickListener
     public void plus_score(int score) {
         highScore.plus_score(score);
     }
+
+    //end background music when leaving the activity
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (Menu.getMusicCounter() == 1) {
+            stopService(new Intent(this, Play_music.class));
+        }
+    }
+
+    protected void onResume() {
+        if (Menu.getMusicCounter() == 1) {
+            startService(new Intent(this, Play_music.class));
+        }
+        super.onResume();
+    }
+
 }
