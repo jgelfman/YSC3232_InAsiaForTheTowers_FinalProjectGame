@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".Menu">
+
+
+    <TextView
+        android:id="@+id/the"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="110dp"
+        android:layout_marginEnd="177dp"
+        android:layout_marginRight="177dp"
+        android:fadeScrollbars="false"
+        android:text="the"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/Orange"
+        android:textStyle="bold"
+        app:autoSizeTextType="uniform"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="230dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="108dp"
+        android:layout_marginLeft="108dp"
+        android:layout_marginTop="50dp"
+        android:background="#00FFFFFF"
+        android:bufferType="normal"
+        android:text="In Asia for"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/Orange"
+        android:textStyle="bold"
+        app:autoSizeTextType="uniform"
+        app:drawableTint="#652929"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.299"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/TOWERS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="89dp"
+        android:layout_marginRight="89dp"
+        android:text="TOWERS"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        android:textColor="@color/Orange"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/checkScore"
+        android:layout_width="163dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="140dp"
+        android:text="High Score"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/startGame1"
+        android:layout_width="163dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="260dp"
+        android:text="Single Player"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/startGame2"
+        android:layout_width="163dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="200dp"
+        android:text="Double Player"
+        tools:ignore="HardcodedText" />
+
+    <ImageButton
+        android:id="@+id/gameSetting"
+        android:layout_width="41dp"
+        android:layout_height="46dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="138dp"
+        android:layout_marginRight="138dp"
+        android:layout_marginBottom="24dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/setting" />
+
+    <ImageButton
+        android:id="@+id/musicSetting"
+        android:layout_width="37dp"
+        android:layout_height="42dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="98dp"
+        android:layout_marginRight="98dp"
+        android:layout_marginBottom="28dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/setting_music" />
+
+    <ImageButton
+        android:id="@+id/soundSetting"
+        android:layout_width="47dp"
+        android:layout_height="45dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="45dp"
+        android:layout_marginRight="45dp"
+        android:layout_marginBottom="25dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/setting_sound"
+        tools:ignore="VectorDrawableCompat" />
+
+</RelativeLayout>

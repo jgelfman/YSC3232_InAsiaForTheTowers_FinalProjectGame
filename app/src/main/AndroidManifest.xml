@@ -9,15 +9,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HighScore"></activity>
-        <activity android:name=".PlayGame" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".PlayDouble"></activity>
+        <activity android:name=".HighScore" />
+        <activity android:name=".PlaySingle" />
+        <activity android:name=".Menu">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <service
+            android:name=".MusicService"
+            android:enabled="true" />
+
+    </application>
 </manifest>
