@@ -50,7 +50,7 @@ public class HighScore extends AppCompatActivity implements View.OnClickListener
         highScore.plus_score(score);
     }
 
-    //end background music when leaving the activity
+    //end backgroundtower music when leaving the activity
     @Override
     protected void onPause() {
         super.onPause();
