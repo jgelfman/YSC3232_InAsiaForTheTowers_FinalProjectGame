@@ -60,7 +60,7 @@ public class Menu extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.startGame1) {
-            Intent intent = new Intent(this, PlaySingle.class);
+            Intent intent = new Intent(this, Game.class);
             startActivity(intent);
         } else if (view.getId() == R.id.checkScore) {
             Intent intent = new Intent(this, HighScore.class);

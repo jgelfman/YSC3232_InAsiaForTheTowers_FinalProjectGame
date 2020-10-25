@@ -1,29 +1,35 @@
 package com.example.inasiaforthetowers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
-import java.io.CharArrayReader;
 import java.util.Random;
 
-public class View extends SurfaceView implements Runnable {
+public class View extends SurfaceView implements Runnable{
 
     private Thread thread;
-    private boolean isPlaying;
+    private boolean isPlaying = false;
     private int screenX, screenY;
     public static float screenRatioX, screenRatioY;
     private Paint paint;
     private Character character;
-    private Background background1, background2;
+    public Background background1, background2;
     int platformGap = 15;
     int platformAmount = 150;
     int maxOffset, minOffset;
+    int[] platformX = new int[platformAmount];
+    int[] platformY = new int[platformAmount];
     private Platform platform;
     private Random random;
+    Bitmap[] characters;
+    int charFrame = 0;
+    int speed = 0, gravity = 3;
+    boolean gameState = false;
 
     public View(Context context, int screenX, int screenY) {
         super(context);
@@ -36,7 +42,7 @@ public class View extends SurfaceView implements Runnable {
         background1 = new Background(screenX, screenY, getResources());
         background2 = new Background(screenX, screenY, getResources());
 
-        background2.y = screenY;
+        background1.y = screenY;
 
         character = new Character(screenY, getResources());
 
@@ -49,8 +55,9 @@ public class View extends SurfaceView implements Runnable {
 
         for (int i = 0; i < platformAmount; i++) {
 
-            int platformloc = minOffset + random.nextInt(maxOffset - minOffset + 1);
-            platform = new Platform(platformloc, platformheight, getResources());
+            platformX[i] = screenX + i * platformGap;
+            platformY[i] = minOffset + random.nextInt(maxOffset - minOffset + 1);
+            platform = new Platform(platformX[i], platformY[i], getResources());
 
         }
 
@@ -59,6 +66,9 @@ public class View extends SurfaceView implements Runnable {
 
     @Override
     public void run() {
+
+        isPlaying = true;
+
         while (isPlaying) {
 
             update();
@@ -107,7 +117,25 @@ public class View extends SurfaceView implements Runnable {
 
             canvas.drawBitmap(character.getJump(), character.x, character.y, paint);
 
-            canvas.drawBitmap(platform.generatePlatform(), platform.x, platform.y, paint);
+            if (charFrame == 0) {
+                charFrame = 1;
+            } else {
+                charFrame = 0;
+            }
+
+            speed = -30;
+            gameState = true;
+
+            if (gameState) {
+                if (character.y < screenY - characters[0].getHeight() || speed < 0) {
+                    speed += gravity;
+                    character.y += speed;
+                }
+            }
+
+            for (int i = 0; i < platformAmount; i++) {
+                canvas.drawBitmap(platform.generatePlatform(), platformX[i], platformY[i], paint);
+            }
 
             getHolder().unlockCanvasAndPost(canvas);
         }

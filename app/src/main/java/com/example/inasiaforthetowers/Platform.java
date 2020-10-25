@@ -36,8 +36,6 @@ public class Platform {
 
         platformsInWindow = 3;
 
-
-
         if (platformsInWindow <= 3) {
             return platform;
         } else {

@@ -11,7 +11,7 @@
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity android:name=".PlayDouble"></activity>
         <activity android:name=".HighScore" />
-        <activity android:name=".PlaySingle"
+        <activity android:name=".Game"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".Menu">

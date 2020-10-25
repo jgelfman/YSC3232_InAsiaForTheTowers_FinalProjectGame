@@ -2,7 +2,6 @@ package inasiaforthetowers;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +21,7 @@ public class PlaySingle extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         findViewById(R.id.startGame1).setOnClickListener(new View.OnClickListener() {
+
 
             @Override
             public void onClick(android.view.View view) {
