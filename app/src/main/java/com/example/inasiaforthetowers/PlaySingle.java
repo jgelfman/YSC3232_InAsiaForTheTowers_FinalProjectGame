@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class PlaySingle extends AppCompatActivity {
 
+    //GameView gameView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //gameView = new GameView(this);
         setContentView(R.layout.activity_play_single);
 
     }

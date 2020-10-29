@@ -1,10 +1,10 @@
 package com.example.inasiaforthetowers;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.WindowManager;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class Game extends AppCompatActivity {
 
@@ -14,15 +14,15 @@ public class Game extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_play_single);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Point point = new Point();
         getWindowManager().getDefaultDisplay().getSize(point);
 
-        gameView = new View(this, point.x, point.y);
+        gameView = new View(this, 1920, 1080);
 
         setContentView(gameView);
-        gameView.run();
+        //gameView.run();
 
     }
 
