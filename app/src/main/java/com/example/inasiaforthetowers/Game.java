@@ -22,7 +22,7 @@ public class Game extends AppCompatActivity {
         gameView = new View(this, 1920, 1080);
 
         setContentView(gameView);
-        //gameView.run();
+        gameView.run();
 
     }
 

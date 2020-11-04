@@ -42,8 +42,6 @@ public class View extends SurfaceView implements Runnable{
         background1 = new Background(screenX, screenY, getResources());
         background2 = new Background(screenX, screenY, getResources());
 
-        background1.y = screenY;
-
         character = new Character(screenY, getResources());
 
         minOffset = 5;
@@ -57,23 +55,25 @@ public class View extends SurfaceView implements Runnable{
 
             platformX[i] = screenX + i * platformGap;
             platformY[i] = minOffset + random.nextInt(maxOffset - minOffset + 1);
-            platform = new Platform(platformX[i], platformY[i], getResources());
+            platform = new Platform(platformX[i], platformY[i], character, getResources());
 
         }
 
         paint = new Paint();
     }
 
-    @Override
     public void run() {
 
-        isPlaying = true;
+        if (character.dead = false) {
+            isPlaying = true;
+        } else {
+            isPlaying = false;
+            //draw score
+        }
 
         while (isPlaying) {
-
             update();
             draw();
-
         }
     }
 
@@ -92,17 +92,17 @@ public class View extends SurfaceView implements Runnable{
         }
 
         if (character.jump) {
-            character.y -= 30 * screenRatioY;
+            character.charlocy -= 30 * screenRatioY;
         } else {
-            character.y += 30 * screenRatioY;
+            character.charlocy += 30 * screenRatioY;
         }
 
-        if (character.y < 0) {
-            character.y = 0;
+        if (character.charlocy < 0) {
+            character.charlocy = 0;
         }
 
-        if (character.y > screenRatioY - screenY - character.height) {
-            character.y = screenY - character.height;
+        if (character.charlocy > screenRatioY - screenY - character.height) {
+            character.charlocy = screenY - character.height;
         }
 
     }
@@ -115,8 +115,9 @@ public class View extends SurfaceView implements Runnable{
             canvas.drawBitmap(background1.background, background1.x, background1.y, paint);
             canvas.drawBitmap(background2.background, background2.x, background2.y, paint);
 
-            canvas.drawBitmap(character.getJump(), character.x, character.y, paint);
+            canvas.drawBitmap(character.getJump(), character.charlocx, character.charlocy, paint);
 
+            /*
             if (charFrame == 0) {
                 charFrame = 1;
             } else {
@@ -127,16 +128,13 @@ public class View extends SurfaceView implements Runnable{
             gameState = true;
 
             if (gameState) {
-                if (character.y < screenY - characters[0].getHeight() || speed < 0) {
+                if (character.charlocy < screenY - characters[0].getHeight() || speed < 0) {
                     speed += gravity;
-                    character.y += speed;
+                    character.charlocy += speed;
                 }
             }
 
-            for (int i = 0; i < platformAmount; i++) {
-                canvas.drawBitmap(platform.generatePlatform(), platformX[i], platformY[i], paint);
-            }
-
+            */
             getHolder().unlockCanvasAndPost(canvas);
         }
 
