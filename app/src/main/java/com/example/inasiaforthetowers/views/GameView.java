@@ -31,36 +31,45 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         this.activity = gameActivity;
         _layout=(RelativeLayout)activity.findViewById(R.id.game_activity);
+
+        Log.i(TAG, "View created!");
         _layout.addView(this);
         getHolder().addCallback(this);
         setFocusable(true);
-        Log.i(TAG, "View created!");
 
-        images = new Bitmap[4];
-        images[0] = BitmapFactory.decodeResource(getResources(), R.drawable.backgroundsky);
+//        images = new Bitmap[4];
+//        images[0] =
+
 
 //        this.gameLoop = new GameLoopThread(getHolder(), this);
+
+    }
+
+    private void init() {
 
     }
 
     void newGame() {
         this.thread = new GameThread(getHolder(), this);
 
-        this._background = new Background(images[0], this.activity.displaySize.x, this.activity.displaySize.y);
+        this._background = new Background(
+                BitmapFactory.decodeResource(getResources(), R.drawable.backgroundsky),
+                this.activity.displaySize.x,
+                this.activity.displaySize.y);
 
-//        this.thread.setRunning(true);
-//        this.thread.run();
+        this.thread.setRunning(true);
+        this.thread.start();
 //        while (true) {
-            Canvas canvas = getHolder().lockCanvas();
-            if (canvas == null) {
-                Log.e(TAG, "Cannot draw onto the canvas as it's null");
-            } else {
-                draw(canvas);
-                getHolder().unlockCanvasAndPost(canvas);
-            }
-            try{
-                Thread.sleep(1000);
-            } catch(Exception e) {}
+//            Canvas canvas = getHolder().lockCanvas();
+//            if (canvas == null) {
+//                Log.e(TAG, "Cannot draw onto the canvas as it's null");
+//            } else {
+//                draw(canvas);
+//                getHolder().unlockCanvasAndPost(canvas);
+//            }
+//            try{
+//                Thread.sleep(1000);
+//            } catch(Exception e) {}
 //        }
     }
 
@@ -124,11 +133,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         public void run() {
             Log.i(TAG, "Thread running!");
 
-//            try{
-//                sleep(1000);
-//            } catch(Exception e) {}
             while(this._holder.isCreating()) {}
             int fps = 30;
+            int timePerTick = 1000 / fps;
 
             while (this._running) {
 
@@ -140,6 +147,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     synchronized (this._holder) {
                         this._view.draw(canvas);
                     }
+                    this._view._background.shiftDown(100);
                 } finally {
                     if (canvas != null) {
                         this._holder.unlockCanvasAndPost(canvas);
@@ -148,11 +156,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
                 long timeElapsed = (System.currentTimeMillis() - timeStarted);
 
-                this.setRunning(false);
+//                this.setRunning(false);
 
-//                try{
-//                    sleep(1000);
-//                } catch(Exception e) {}
+                try{
+                    sleep(timePerTick - timeElapsed);
+                } catch(Exception e) {}
             }
         }
     }
