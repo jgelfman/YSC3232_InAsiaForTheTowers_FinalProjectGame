@@ -9,12 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".PlayDouble"></activity>
-        <activity android:name=".HighScore" />
-        <activity android:name=".Game"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".Menu">
+        <activity android:name=".MenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,7 +18,7 @@
         </activity>
 
         <service
-            android:name=".Menu_music"
+            android:name="Menu_music"
             android:enabled="true" />
 
         <service

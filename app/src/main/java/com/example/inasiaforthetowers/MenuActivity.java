@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Menu extends AppCompatActivity implements View.OnClickListener {
+public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
     public static int musicCounter = 1;
     Intent bgm;
     Button singleStart;
@@ -86,7 +86,7 @@ public class Menu extends AppCompatActivity implements View.OnClickListener {
     // End of setting pop up
 
     @SuppressLint("SetTextI18n")
-    public void createNewIDDialogue(Menu menu) {
+    public void createNewIDDialogue(MenuActivity menu) {
         AlertDialog.Builder dialogueBuilder = new AlertDialog.Builder(this);
         final View IDPopUpView = getLayoutInflater().inflate(R.layout.popup, null);
         newID = IDPopUpView.findViewById(R.id.enterNewID);
