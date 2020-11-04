@@ -2,8 +2,11 @@ package com.example.inasiaforthetowers;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -27,8 +30,16 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.menu);
 
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+        );
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        setContentView(R.layout.menu);
 
         //Main menu button choices
         singleStart = findViewById(R.id.startGame1);
@@ -60,8 +71,9 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.startGame1) {
-//            Intent intent = new Intent(this, Game.class);
-//            startActivity(intent);
+            Intent intent = new Intent(this, GameActivity.class);
+            startActivity(intent);
+            finish();
         } else if (view.getId() == R.id.checkScore) {
 //            Intent intent = new Intent(this, HighScore.class);
 //            startActivity(intent);
