@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.VelocityTracker;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -27,8 +28,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Background _background;
     private PlayableCharacter _character;
 
-    private int touchX;
-    private int touchY;
+    private VelocityTracker velocityTracker = null;
+
+    private int xVelocity = 0;
+    private int yVelocity = 0;
 
     public GameView(GameActivity gameActivity) {
         super(gameActivity);
@@ -58,9 +61,30 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        int index = event.getActionIndex();
+        int action = event.getActionMasked();
+        int pointerId = event.getPointerId(index);
 
-        touchX = (int) event.getX();
-        touchY = (int) event.getY();
+        switch(action) {
+            case MotionEvent.ACTION_DOWN:
+                if(velocityTracker == null) {
+                    velocityTracker = VelocityTracker.obtain();
+                }
+                else {
+                    velocityTracker.clear();
+                }
+                velocityTracker.addMovement(event);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                velocityTracker.addMovement(event);
+                velocityTracker.computeCurrentVelocity(25);
+                xVelocity = (int) velocityTracker.getXVelocity();
+                yVelocity = (int) velocityTracker.getYVelocity();
+//                velocityTracker.recycle();
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                break;
+        }
         return true;
     }
 
@@ -103,7 +127,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
         this._background.shiftDown(10);
-        this._character.move(touchX / 100, touchY / 100);
+        this._character.move(xVelocity, yVelocity);
+        xVelocity = 0;
+        yVelocity = 0;
     }
 
     class GameThread extends Thread {

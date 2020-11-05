@@ -27,12 +27,11 @@ public class PlayableCharacter {
     }
 
     public void move(int dx, int dy) {
-        x -= dx;
-        y -= dy;
+        x += dx;
+        y += dy;
     }
 
     public void draw(Canvas canvas){
-        Log.i("Character", "Draw got called.");
         canvas.drawBitmap(_image, x, y, null);
     }
 }
