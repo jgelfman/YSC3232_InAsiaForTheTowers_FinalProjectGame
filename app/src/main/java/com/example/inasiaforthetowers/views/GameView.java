@@ -48,12 +48,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     void newGame() {
         this._background = new Background(
-                BitmapFactory.decodeResource(getResources(), R.drawable.backgroundsky),
+                BitmapFactory.decodeResource(getResources(), R.drawable.backgroundskygarden),
                 this.activity.displaySize.x,
                 this.activity.displaySize.y
         );
         this._character = new PlayableCharacter(
-                BitmapFactory.decodeResource(getResources(), R.drawable.halcyon_right),
+                BitmapFactory.decodeResource(getResources(), R.drawable.halcyon_mascot1),
+                BitmapFactory.decodeResource(getResources(), R.drawable.halcyon_mascot2),
                 this.activity.displaySize.x,
                 this.activity.displaySize.y
         );

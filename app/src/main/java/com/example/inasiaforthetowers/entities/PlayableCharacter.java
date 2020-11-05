@@ -5,19 +5,21 @@ import android.graphics.Canvas;
 import android.util.Log;
 
 public class PlayableCharacter {
-    private Bitmap _image;
-    public int x;
-    public int y;
-    private int _sizeX;
-    private int _sizeY;
-    public int width;
-    public int height;
+    private Bitmap _image1, _image2;
+    public int x,y;
+    private int _sizeX, _sizeY;
+    public int width, height;
+    public int wingCounter = 0;
+    public boolean jump = false;
+    public boolean jumpdone = true;
 
-    public PlayableCharacter(Bitmap image, int sizeX, int sizeY){
+    public PlayableCharacter(Bitmap image1, Bitmap image2, int sizeX, int sizeY){
 
-        _image = Bitmap.createScaledBitmap(image, 400, 200, true);
-        width = _image.getWidth();
-        height = _image.getHeight();
+        _image1 = Bitmap.createScaledBitmap(image1, 400, 200, true);
+        _image2 = Bitmap.createScaledBitmap(image2, 400, 200, true);
+
+        width = _image1.getWidth();
+        height = _image1.getHeight();
 
         x = sizeX/2 - 200;
         y = sizeY-200-20;;
@@ -32,6 +34,13 @@ public class PlayableCharacter {
     }
 
     public void draw(Canvas canvas){
-        canvas.drawBitmap(_image, x, y, null);
+        if (wingCounter == 0) {
+            wingCounter += 50 ;
+            canvas.drawBitmap(_image1, x, y, null);
+        } else {
+            wingCounter -= 50 ;
+            canvas.drawBitmap(_image2, x, y, null);
+        }
+
     }
 }
