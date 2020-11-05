@@ -6,10 +6,6 @@ import android.graphics.Rect;
 
 import java.util.Random;
 
-import com.example.inasiaforthetowers.GameActivity;
-import com.example.inasiaforthetowers.MenuActivity;
-import com.example.inasiaforthetowers.views.GameView;
-
 public class Platform extends Entities {
 
     private Bitmap _platformImage;

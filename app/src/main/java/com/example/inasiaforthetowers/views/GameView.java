@@ -10,6 +10,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.VelocityTracker;
 import android.widget.RelativeLayout;
+import android.view.VelocityTracker;
 
 import androidx.annotation.NonNull;
 
@@ -36,8 +37,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private VelocityTracker velocityTracker = null;
 
-    private int xVelocity = 0;
-    private int yVelocity = 0;
+    private float xVelocity = 0;
+    private float yVelocity = 0;
 
     private ArrayList<Platform> _platforms;
     private ArrayList<Border> _leftBorder;
@@ -104,10 +105,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 break;
             case MotionEvent.ACTION_MOVE:
                 velocityTracker.addMovement(event);
-                velocityTracker.computeCurrentVelocity(25);
-                xVelocity = (int) velocityTracker.getXVelocity();
-                yVelocity = (int) velocityTracker.getYVelocity();
-//                velocityTracker.recycle();
+                velocityTracker.computeCurrentVelocity(3);
+                xVelocity = velocityTracker.getXVelocity();
+                yVelocity = velocityTracker.getYVelocity();
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 break;
@@ -145,8 +145,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas){
         super.draw(canvas);
-        if(canvas!=null){
-//            canvas.drawRGB(120, 120, 120);
+        if(canvas != null){
             _background.draw(canvas);
             _character.draw(canvas);
 
@@ -162,26 +161,35 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    private boolean levelColission(PlayableCharacter character, Platform platform){
+    private boolean platformCollision(PlayableCharacter character, Platform platform){
         return Rect.intersects(character.retRect(), platform.retRect())
                 && character.retY() + character.retHeight() < platform.retY() + 20
                 && character.retWallJumpIndex() == 0 && character.retFloorJumpIndex() == 0;
     }
 
-    private boolean borderCollistion(PlayableCharacter character, Border border){
+    private boolean borderCollision(PlayableCharacter character, Border border){
         return Rect.intersects(character.retRect(), border.retRect())
                 && character.retWallJumpIndex() == 0 && character.retCanWallJump();
     }
 
     public void update() {
-        this._background.shiftDown(10);
-        this._character.move(xVelocity, yVelocity);
-        xVelocity = 0;
-        yVelocity = 0;
+        int gravity = 15;
+
+        this._background.shiftDown(gravity);
+        this._character.changeSpeed(xVelocity, yVelocity);
+        this._character.move(1000 / 30);
+
+        if (this._character.x < 0)
+            this._character.x = 0;
+        else if (this._character.x > this.activity.displaySize.x  -this._character.width)
+            this._character.x = this.activity.displaySize.x - this._character.width;
+
+        if (this._character.y > this.activity.displaySize.y - this._character.height)
+            this._character.y = this.activity.displaySize.y - this._character.height;
 
         for (int i = 0; i < _platforms.size(); i++) {
             _platforms.get(i).update(_character.retDY());
-            if (levelColission(_character, _platforms.get(i))) {
+            if (platformCollision(_character, _platforms.get(i))) {
                 _character.setFloorJumpIndex(1);
                 if (_character.retMaxFloor() < _platforms.get(i).retIndex()) {
                     _character.setMaxFloor(_platforms.get(i).retIndex());
@@ -203,8 +211,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         for (int i = 0; i < _leftBorder.size(); i++) {
             _leftBorder.get(i).update(_character.retDY());
             _rightBorder.get(i).update(_character.retDY());
-            if (borderCollistion(_character, _leftBorder.get(i))
-                    || borderCollistion(_character, _rightBorder.get(i)))
+            if (borderCollision(_character, _leftBorder.get(i))
+                    || borderCollision(_character, _rightBorder.get(i)))
                 _character.setWallJumpIndex(1);
 
             if (_leftBorder.get(i).retY() > this.activity.displaySize.y) {
