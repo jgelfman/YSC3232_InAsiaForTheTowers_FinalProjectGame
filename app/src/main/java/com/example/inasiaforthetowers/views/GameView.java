@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.RelativeLayout;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import com.example.inasiaforthetowers.GameActivity;
 import com.example.inasiaforthetowers.R;
 import com.example.inasiaforthetowers.entities.Background;
+import com.example.inasiaforthetowers.entities.PlayableCharacter;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private static final String TAG = "GameView";
@@ -22,9 +24,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private RelativeLayout _layout;
 
-    private Bitmap[] images;
-
     private Background _background;
+    private PlayableCharacter _character;
+
+    private int touchX;
+    private int touchY;
 
     public GameView(GameActivity gameActivity) {
         super(gameActivity);
@@ -37,54 +41,39 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         getHolder().addCallback(this);
         setFocusable(true);
 
-//        images = new Bitmap[4];
-//        images[0] =
-
-
-//        this.gameLoop = new GameLoopThread(getHolder(), this);
-
-    }
-
-    private void init() {
-
     }
 
     void newGame() {
-        this.thread = new GameThread(getHolder(), this);
-
         this._background = new Background(
                 BitmapFactory.decodeResource(getResources(), R.drawable.backgroundsky),
                 this.activity.displaySize.x,
-                this.activity.displaySize.y);
+                this.activity.displaySize.y
+        );
+        this._character = new PlayableCharacter(
+                BitmapFactory.decodeResource(getResources(), R.drawable.halcyon_right),
+                this.activity.displaySize.x,
+                this.activity.displaySize.y
+        );
+    }
 
-        this.thread.setRunning(true);
-        this.thread.start();
-//        while (true) {
-//            Canvas canvas = getHolder().lockCanvas();
-//            if (canvas == null) {
-//                Log.e(TAG, "Cannot draw onto the canvas as it's null");
-//            } else {
-//                draw(canvas);
-//                getHolder().unlockCanvasAndPost(canvas);
-//            }
-//            try{
-//                Thread.sleep(1000);
-//            } catch(Exception e) {}
-//        }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        touchX = (int) event.getX();
+        touchY = (int) event.getY();
+        return true;
     }
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
+        this.thread = new GameThread(getHolder(), this);
         newGame();
-//        invalidate();
-//        this.gameLoop.setRunning(true);
-//        this.gameLoop.run();
+        this.thread.setRunning(true);
+        this.thread.start();
     }
 
     @Override
-    public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-
-    }
+    public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) { }
 
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
@@ -108,7 +97,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if(canvas!=null){
 //            canvas.drawRGB(120, 120, 120);
             _background.draw(canvas);
+            _character.draw(canvas);
         }
+    }
+
+    public void update() {
+        this._background.shiftDown(10);
+        this._character.move(touchX / 100, touchY / 100);
     }
 
     class GameThread extends Thread {
@@ -147,7 +142,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     synchronized (this._holder) {
                         this._view.draw(canvas);
                     }
-                    this._view._background.shiftDown(100);
+                    this._view.update();
                 } finally {
                     if (canvas != null) {
                         this._holder.unlockCanvasAndPost(canvas);
