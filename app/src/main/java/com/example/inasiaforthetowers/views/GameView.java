@@ -30,8 +30,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private VelocityTracker velocityTracker = null;
 
-    private int xVelocity = 0;
-    private int yVelocity = 0;
+    private float xVelocity = 0;
+    private float yVelocity = 0;
 
     public GameView(GameActivity gameActivity) {
         super(gameActivity);
@@ -77,10 +77,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 break;
             case MotionEvent.ACTION_MOVE:
                 velocityTracker.addMovement(event);
-                velocityTracker.computeCurrentVelocity(25);
-                xVelocity = (int) velocityTracker.getXVelocity();
-                yVelocity = (int) velocityTracker.getYVelocity();
-//                velocityTracker.recycle();
+                velocityTracker.computeCurrentVelocity(3);
+                xVelocity = velocityTracker.getXVelocity();
+                yVelocity = velocityTracker.getYVelocity();
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 break;
@@ -119,15 +118,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas){
         super.draw(canvas);
         if(canvas!=null){
-//            canvas.drawRGB(120, 120, 120);
             _background.draw(canvas);
             _character.draw(canvas);
         }
     }
 
     public void update() {
-        this._background.shiftDown(10);
-        this._character.move(xVelocity, yVelocity);
+        int gravity = 15;
+
+        this._background.shiftDown(gravity);
+        this._character.changeSpeed(xVelocity, yVelocity);
+        this._character.move(1000 / 30);
+        if (this._character.x < 0)
+            this._character.x = 0;
+        else if (this._character.x > this.activity.displaySize.x  -this._character.width)
+            this._character.x = this.activity.displaySize.x - this._character.width;
+
+        if (this._character.y > this.activity.displaySize.y - this._character.height)
+            this._character.y = this.activity.displaySize.y - this._character.height;
         xVelocity = 0;
         yVelocity = 0;
     }
@@ -147,7 +155,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         public void setRunning(boolean run) {
             this._running = run;
-
         }
 
         @Override
@@ -176,8 +183,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
 
                 long timeElapsed = (System.currentTimeMillis() - timeStarted);
-
-//                this.setRunning(false);
 
                 try{
                     sleep(timePerTick - timeElapsed);
