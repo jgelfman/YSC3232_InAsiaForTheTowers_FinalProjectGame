@@ -3,6 +3,7 @@ package com.example.inasiaforthetowers.views;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -15,7 +16,11 @@ import androidx.annotation.NonNull;
 import com.example.inasiaforthetowers.GameActivity;
 import com.example.inasiaforthetowers.R;
 import com.example.inasiaforthetowers.entities.Background;
+import com.example.inasiaforthetowers.entities.Border;
+import com.example.inasiaforthetowers.entities.Platform;
 import com.example.inasiaforthetowers.entities.PlayableCharacter;
+
+import java.util.ArrayList;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private static final String TAG = "GameView";
@@ -27,11 +32,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private Background _background;
     private PlayableCharacter _character;
+    private Platform _platform;
 
     private VelocityTracker velocityTracker = null;
 
     private int xVelocity = 0;
     private int yVelocity = 0;
+
+    private ArrayList<Platform> _platforms;
+    private ArrayList<Border> _leftBorder;
+    private ArrayList<Border> _rightBorder;
 
     public GameView(GameActivity gameActivity) {
         super(gameActivity);
@@ -58,6 +68,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 this.activity.displaySize.x,
                 this.activity.displaySize.y
         );
+        _leftBorder = new ArrayList<>();
+        _rightBorder = new ArrayList<>();
+        _platforms = new ArrayList<>();
+        for(int i = 0; i< this.activity.displaySize.y / 100 + 1; i++) {
+
+            _platforms.add(new Platform(BitmapFactory.decodeResource(getResources(), R.drawable.platformskygarden), this.activity.displaySize.y - this.activity.displaySize.y / 4 - i * 100, i, BitmapFactory.decodeResource(getResources(), R.drawable.bushplatformborder).getWidth()));
+
+        }
+        for(int i = this.activity.displaySize.y / BitmapFactory.decodeResource(getResources(), R.drawable.borderplants).getHeight(); i > -2; i--) {
+            _leftBorder.add(new Border(BitmapFactory.decodeResource(getResources(), R.drawable.borderplants), 0, i * BitmapFactory.decodeResource(getResources(), R.drawable.borderplants).getHeight()));
+            _rightBorder.add(new Border(BitmapFactory.decodeResource(getResources(), R.drawable.borderplants), this.activity.displaySize.x - BitmapFactory.decodeResource(getResources(), R.drawable.borderplants).getWidth(), i * BitmapFactory.decodeResource(getResources(), R.drawable.borderplants).getHeight()));
+        }
     }
 
     @Override
@@ -123,7 +145,28 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 //            canvas.drawRGB(120, 120, 120);
             _background.draw(canvas);
             _character.draw(canvas);
+
+            for(Border box: _leftBorder) {
+                box.draw(canvas);
+            }
+            for(Border box: _rightBorder) {
+                box.draw(canvas);
+            }
+            for(Platform _platform: _platforms) {
+                _platform.draw(canvas);
+            }
         }
+    }
+
+    private boolean levelColission(PlayableCharacter character, Platform platform){
+        return Rect.intersects(character.retRect(), platform.retRect())
+                && character.retY() + character.retHeight() < platform.retY() + 20
+                && character.retWallJumpIndex() == 0 && character.retFloorJumpIndex() == 0;
+    }
+
+    private boolean borderCollistion(PlayableCharacter character, Border border){
+        return Rect.intersects(character.retRect(), border.retRect())
+                && character.retWallJumpIndex()==0 && character.retCanWallJump();
     }
 
     public void update() {
@@ -131,6 +174,43 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         this._character.move(xVelocity, yVelocity);
         xVelocity = 0;
         yVelocity = 0;
+
+        for (int i = 0; i < _platforms.size(); i++) {
+            _platforms.get(i).update(_character.retDY());
+            if (levelColission(_character, _platforms.get(i))) {
+                _character.setFloorJumpIndex(1);
+                if (_character.retMaxFloor() < _platforms.get(i).retIndex()) {
+                    _character.setMaxFloor(_platforms.get(i).retIndex());
+                }
+            }
+            if (_platforms.get(i).retY() > this.activity.displaySize.y + 20) {
+                _platforms.remove(i);
+                if(_platforms.get(_platforms.size() - 1).retIndex() + 1<=1000){
+                    _platforms.add(new Platform (BitmapFactory.decodeResource(getResources(), R.drawable.borderplants),
+                            _platforms.get(_platforms.size() - 1).retY() - 53 - _platforms.get(_platforms.size() - 1).retHeight(),
+                            _platforms.get(_platforms.size() - 1).retIndex() + 1, BitmapFactory.decodeResource(getResources(), R.drawable.borderplants).getWidth()));
+                }
+            }
+        }
+
+        for (int i = 0; i < _leftBorder.size(); i++) {
+            _leftBorder.get(i).update(_character.retDY());
+            _rightBorder.get(i).update(_character.retDY());
+            if (borderCollistion(_character, _leftBorder.get(i))
+                    || borderCollistion(_character, _rightBorder.get(i)))
+                _character.setWallJumpIndex(1);
+
+            if (_leftBorder.get(i).retY() > this.activity.displaySize.y) {
+                _leftBorder.remove(i);
+                _rightBorder.remove(i);
+                _leftBorder.add(new Border(BitmapFactory.decodeResource(getResources(), R.drawable.borderplants), 0,
+                        _leftBorder.get(_leftBorder.size() - 1).retY() - _leftBorder.get(_leftBorder.size() - 1).retHeight()));
+                _rightBorder.add(new Border(BitmapFactory.decodeResource(getResources(), R.drawable.borderplants),
+                        this.activity.displaySize.x - _rightBorder.get(_rightBorder.size() - 1).retWidth(),
+                        _rightBorder.get(_rightBorder.size() - 1).retY() - _rightBorder.get(_rightBorder.size() - 1).retHeight()));
+            }
+        }
+
     }
 
     class GameThread extends Thread {

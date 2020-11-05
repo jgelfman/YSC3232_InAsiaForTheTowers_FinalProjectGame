@@ -34,7 +34,7 @@ public class GameActivity extends Activity {
 
         setContentView(R.layout.game_activity);
 
-        displaySize=new Point();
+        displaySize = new Point();
         getWindowManager().getDefaultDisplay().getSize(displaySize);
         GameView game = new GameView(this);
 
