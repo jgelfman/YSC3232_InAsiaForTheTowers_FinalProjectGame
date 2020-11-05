@@ -11,6 +11,9 @@ public abstract class Entities {
     public int retY() {
         return y;
     }
+    public int retX() {
+        return x;
+    }
     public int retDY() {
         return dy;
     }

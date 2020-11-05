@@ -71,10 +71,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         _leftBorder = new ArrayList<>();
         _rightBorder = new ArrayList<>();
         _platforms = new ArrayList<>();
-        for(int i = 0; i< this.activity.displaySize.y / 100 + 1; i++) {
+        for(int i = 0; i < this.activity.displaySize.y / 100 + 1; i++) {
 
-            _platforms.add(new Platform(BitmapFactory.decodeResource(getResources(), R.drawable.platformskygarden), this.activity.displaySize.y - this.activity.displaySize.y / 4 - i * 100, i, BitmapFactory.decodeResource(getResources(), R.drawable.bushplatformborder).getWidth()));
-
+            _platforms.add(
+                    new Platform(BitmapFactory.decodeResource(getResources(), R.drawable.platformskygarden),
+                    this.activity.displaySize.y - this.activity.displaySize.y / 4 - i * 100,
+                            this.activity.displaySize.x,
+                            i,
+                            30));
         }
         for(int i = this.activity.displaySize.y / BitmapFactory.decodeResource(getResources(), R.drawable.borderplants).getHeight(); i > -2; i--) {
             _leftBorder.add(new Border(BitmapFactory.decodeResource(getResources(), R.drawable.borderplants), 0, i * BitmapFactory.decodeResource(getResources(), R.drawable.borderplants).getHeight()));
@@ -166,7 +170,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private boolean borderCollistion(PlayableCharacter character, Border border){
         return Rect.intersects(character.retRect(), border.retRect())
-                && character.retWallJumpIndex()==0 && character.retCanWallJump();
+                && character.retWallJumpIndex() == 0 && character.retCanWallJump();
     }
 
     public void update() {
@@ -186,9 +190,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if (_platforms.get(i).retY() > this.activity.displaySize.y + 20) {
                 _platforms.remove(i);
                 if(_platforms.get(_platforms.size() - 1).retIndex() + 1<=1000){
-                    _platforms.add(new Platform (BitmapFactory.decodeResource(getResources(), R.drawable.borderplants),
-                            _platforms.get(_platforms.size() - 1).retY() - 53 - _platforms.get(_platforms.size() - 1).retHeight(),
-                            _platforms.get(_platforms.size() - 1).retIndex() + 1, BitmapFactory.decodeResource(getResources(), R.drawable.borderplants).getWidth()));
+                    _platforms.add(
+                            new Platform (BitmapFactory.decodeResource(getResources(),
+                                    R.drawable.borderplants),
+                                    _platforms.get(_platforms.size() - 1).retY() - 53 - _platforms.get(_platforms.size() - 1).retHeight(),
+                                    _platforms.get(_platforms.size() - 1).retX() - _platforms.get(_platforms.size() - 1).retHeight(),
+                                    _platforms.get(_platforms.size() - 1).retIndex() + 1, BitmapFactory.decodeResource(getResources(), R.drawable.borderplants).getWidth()));
                 }
             }
         }

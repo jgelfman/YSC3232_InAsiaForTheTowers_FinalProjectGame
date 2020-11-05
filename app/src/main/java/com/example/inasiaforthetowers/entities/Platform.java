@@ -17,32 +17,30 @@ public class Platform extends Entities {
     private int platY, platX;
     private int platformWidth, platformHeight;
 
-    public Platform(Bitmap image, int platformY, int indx, int borderWidth){
-        this.platformIndex=indx;
+    public Platform(Bitmap image, int platformY, int platformX, int index, int borderWidth){
+        this.platformIndex=index;
         this.platY=platformY;
-        this._platformImage = Bitmap.createScaledBitmap(image, scale(image, borderWidth), image.getHeight() / 2, true);
+        this._platformImage = Bitmap.createScaledBitmap(image, 400, 30, true);
 
-        platX = _platformImage.getWidth();
-        platformHeight = _platformImage.getHeight();
+        platformHeight = this._platformImage.getHeight();
+        platformWidth = this._platformImage.getWidth();
 
         if(platformIndex == 0 || platformIndex % 50 == 0){
             platX = borderWidth;
         }
         else{
             Random random = new Random();
-            platX = random.nextInt(platX - 2 * borderWidth - platX)
+            platX = random.nextInt(platformX - 2 * borderWidth - platformWidth)
                     + borderWidth;
         }
     }
 
     public void update(int newY){
-
         platY = platY + newY;
 
     }
 
     public void draw(Canvas canvas){
-
         canvas.drawBitmap(_platformImage, platX, platY, null);
 
     }
@@ -53,7 +51,7 @@ public class Platform extends Entities {
             return 300 - 2 * borderWidth;
         }
         else{
-            return _platformImage.getWidth() / (3 + platformIndex / 100);
+            return platformWidth / (3 + platformIndex / 100);
         }
 
     }

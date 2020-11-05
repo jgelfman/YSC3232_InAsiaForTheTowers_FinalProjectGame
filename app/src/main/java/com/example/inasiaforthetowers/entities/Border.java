@@ -7,12 +7,12 @@ public class Border extends Entities {
 
     Bitmap _border;
 
-    public Border(Bitmap image, int x, int y){
+    public Border(Bitmap image, int sizeX, int sizeY){
         this._border = image;
-        this.x = x;
-        this.y = y;
-        width = image.getWidth();
-        height = image.getHeight();
+        this.x = sizeX;
+        this.y = sizeY;
+        width = 30;
+        height = 30;
     }
 
     public void update(int dy){
