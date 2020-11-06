@@ -8,27 +8,24 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".PlayDouble"></activity>
-        <activity android:name=".HighScore" />
-        <activity android:name=".Game"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".Menu">
+        android:theme="@style/Theme.AppCompat.NoActionBar"
+        >
+        <activity android:name=".MenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".GameActivity"></activity>
 
-        <service
-            android:name=".Menu_music"
-            android:enabled="true" />
+<!--        <service-->
+<!--            android:name="Menu_music"-->
+<!--            android:enabled="false" />-->
 
-        <service
-            android:name=".Play_music"
-            android:enabled="true" />
+<!--        <service-->
+<!--            android:name=".Play_music"-->
+<!--            android:enabled="false" />-->
 
     </application>
 </manifest>
