@@ -44,6 +44,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private ArrayList<Border> _leftBorder;
     private ArrayList<Border> _rightBorder;
 
+
     public GameView(GameActivity gameActivity) {
         super(gameActivity);
 
@@ -225,7 +226,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         _rightBorder.get(_rightBorder.size() - 1).retY() - _rightBorder.get(_rightBorder.size() - 1).retHeight()));
             }
         }
-
+        xVelocity = 0;
+        yVelocity = 0;
     }
 
     class GameThread extends Thread {
@@ -243,7 +245,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         public void setRunning(boolean run) {
             this._running = run;
-
         }
 
         @Override
@@ -272,8 +273,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
 
                 long timeElapsed = (System.currentTimeMillis() - timeStarted);
-
-//                this.setRunning(false);
 
                 try{
                     sleep(timePerTick - timeElapsed);
