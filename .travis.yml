@@ -1,0 +1,13 @@
+language: android
+dist: trusty
+android:
+  components:
+
+    # The BuildTools version:
+    - build-tools-30.0.4
+
+    # The SDK version:
+    - android-30
+
+    # System image:
+    - sys-img-x86-android-30
