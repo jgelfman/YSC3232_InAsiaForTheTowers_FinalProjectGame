@@ -14,7 +14,7 @@ public class Game extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play_single);
+        //setContentView(R.layout.GameActivity);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Point point = new Point();
         getWindowManager().getDefaultDisplay().getSize(point);
@@ -27,10 +27,3 @@ public class Game extends AppCompatActivity {
     }
 
 }
-
-// fix background movement
-// fix actual character render
-// impl. character swipe left/right move
-// fix platform render loop per window
-// imp. character falling down physics
-// imp. game when character fall loss

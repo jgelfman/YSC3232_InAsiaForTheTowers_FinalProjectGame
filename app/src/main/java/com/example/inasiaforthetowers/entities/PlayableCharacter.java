@@ -10,6 +10,11 @@ public class PlayableCharacter extends Entities {
     private int _sizeX, _sizeY;
     public int width, height;
     private int totalY;
+    int wingCounter = 0;
+    boolean canWallJump;
+    int wallJumpFrame;
+    int floorJumpFrame;
+    int maxFloor;
 
     public float velocityX = 0; // px/s
     public float velocityY = 0; // px/s
@@ -20,21 +25,12 @@ public class PlayableCharacter extends Entities {
     public static final double GRAVITY = 0.05; // px/s^2
     public static final double BREAKING = 0.1; // px/s^2
 
-    public PlayableCharacter(Bitmap image, int sizeX, int sizeY){
-
-    public static final float MAX_SPEED = 5; // px/s
-    public static final float TERMINAL_VELOCITY = 3; // px/s
-
-    public static final double GRAVITY = 0.05; // px/s^2
-    public static final double BREAKING = 0.1; // px/s^2
-
-    public int wingCounter = 0;
-    private boolean canWallJump;
-    private int wallJumpFrame;
-    private int floorJumpFrame;
-    private int maxFloor;
-
     public PlayableCharacter(Bitmap image1, Bitmap image2, int sizeX, int sizeY) {
+
+        final float MAX_SPEED = 5; // px/s
+        final float TERMINAL_VELOCITY = 3; // px/s
+        final double GRAVITY = 0.05; // px/s^2
+        final double BREAKING = 0.1; // px/s^2
 
         _image1 = Bitmap.createScaledBitmap(image1, 400, 200, true);
         _image2 = Bitmap.createScaledBitmap(image2, 400, 200, true);
