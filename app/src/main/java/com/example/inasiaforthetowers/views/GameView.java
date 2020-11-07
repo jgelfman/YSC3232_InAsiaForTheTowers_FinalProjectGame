@@ -50,7 +50,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super(gameActivity);
 
         this.activity = gameActivity;
-        _layout=(RelativeLayout)activity.findViewById(R.id.game_activity);
+        _layout = activity.findViewById(R.id.game_activity);
 
         Log.i(TAG, "View created!");
         _layout.addView(this);
@@ -171,13 +171,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         return Rect.intersects(character.retRect(), platform.retRect())
                 && character.y < platform.platY
                 && character.velocityY > 0;
-//                && character.retWallJumpIndex() == 0 && character.retFloorJumpIndex() == 0;
     }
-
-//    private boolean borderCollision(PlayableCharacter character, Border border){
-//        return Rect.intersects(character.retRect(), border.retRect());
-////                && character.retWallJumpIndex() == 0 && character.retCanWallJump();
-//    }
 
     public void update() {
         int gravity = 15;
@@ -191,8 +185,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         else if (this._character.x > this.activity.displaySize.x - this._character.width - 100)
             this._character.x = this.activity.displaySize.x - this._character.width - 100;
 
-        if (this._character.y > this.activity.displaySize.y - this._character.height)
-            this._character.y = this.activity.displaySize.y - this._character.height;
 
         if (this._character.y < this.activity.displaySize.y * 0.4) {
             shift = (int)(this.activity.displaySize.y * 0.4 - this._character.y);
@@ -216,22 +208,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
             if (_platforms.get(i).platY > this.activity.displaySize.y + 20) {
                 _platforms.remove(i);
-//                if(_platforms.get(_platforms.size() - 1).retIndex() + 1<=1000){
                     _platforms.add(
                             new Platform (platformImg,
                                     _platforms.get(_platforms.size() - 1).platY - 400,
                                     this.activity.displaySize.x,
                                     _platforms.get(_platforms.size() - 1).retIndex() + 1, 100));
-//                }
             }
         }
 
         for (int i = 0; i < _leftBorder.size(); i++) {
             _leftBorder.get(i).update(delta);
             _rightBorder.get(i).update(delta);
-//            if (borderCollision(_character, _leftBorder.get(i))
-//                    || borderCollision(_character, _rightBorder.get(i)))
-//                _character.setWallJumpIndex(1);
 
             if (_leftBorder.get(i).y > this.activity.displaySize.y) {
                 _leftBorder.remove(i);
@@ -243,6 +230,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         _rightBorder.get(_rightBorder.size() - 1).y - borderImg.getHeight()));
             }
         }
+
+        if (this._character.y > this.activity.displaySize.y - this._character.height) {
+            thread.setRunning(false);
+        }
+
         xVelocity = 0;
         yVelocity = 0;
     }
