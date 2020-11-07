@@ -24,7 +24,6 @@ public class PlayableCharacter {
 
         _image1 = Bitmap.createScaledBitmap(image1, 300, 150, true);
         _image2 = Bitmap.createScaledBitmap(image2, 300, 150, true);
-
         width = _image1.getWidth();
         height = _image1.getHeight();
 
