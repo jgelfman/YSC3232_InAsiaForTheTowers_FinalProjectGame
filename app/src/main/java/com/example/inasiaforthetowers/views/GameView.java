@@ -76,13 +76,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         _platforms = new ArrayList<>();
         platformImg = BitmapFactory.decodeResource(getResources(), R.drawable.platformskygarden);
 
-        for(int i = 0; i < this.activity.displaySize.y / 400 + 1; i++) {
+        for(int i = 0; i < this.activity.displaySize.y / 400 + 2; i++) {
             _platforms.add(
                     new Platform(platformImg,
-                    this.activity.displaySize.y - 400 - i * 400,
+                    this.activity.displaySize.y - 30 - i * 400,
                             this.activity.displaySize.x,
                             i,
-                            150));
+                            100));
         }
         Bitmap border = BitmapFactory.decodeResource(getResources(), R.drawable.borderplants);
         borderImg = Bitmap.createScaledBitmap(border, 100, border.getHeight() * 100 / border.getWidth(), true);
@@ -90,6 +90,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             _leftBorder.add(new Border(borderImg, 0, i * borderImg.getHeight()));
             _rightBorder.add(new Border(borderImg, this.activity.displaySize.x - 100, i * borderImg.getHeight()));
         }
+        _character.setMaxFloor(0);
     }
 
     @Override
@@ -197,8 +198,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             shift = (int)(this.activity.displaySize.y * 0.4 - this._character.y);
             this._character.y = (int)(this.activity.displaySize.y * 0.4);
         }
-
-        int delta = gravity + shift;
+        int delta = 0;
+        if (_character.retMaxFloor() > 0)
+            delta = gravity + shift;
 
         this._background.shiftDown(delta);
 
@@ -219,7 +221,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                             new Platform (platformImg,
                                     _platforms.get(_platforms.size() - 1).platY - 400,
                                     this.activity.displaySize.x,
-                                    _platforms.get(_platforms.size() - 1).retIndex() + 1, 150));
+                                    _platforms.get(_platforms.size() - 1).retIndex() + 1, 100));
 //                }
             }
         }

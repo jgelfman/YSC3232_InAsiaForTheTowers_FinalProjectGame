@@ -8,9 +8,7 @@ import android.util.Log;
 public class PlayableCharacter {
     private Bitmap _image1, _image2;
     public int x,y;
-    private int _sizeX, _sizeY;
     public int width, height;
-    private int totalY;
 
     public float velocityX = 0; // px/ms
     public float velocityY = 0; // px/ms
@@ -20,9 +18,6 @@ public class PlayableCharacter {
     public static final double BREAKING = 0.1; // px/ms^2
 
     public int wingCounter = 0;
-    private boolean canWallJump;
-    private int wallJumpFrame;
-    private int floorJumpFrame;
     private int maxFloor;
 
     public PlayableCharacter(Bitmap image1, Bitmap image2, int sizeX, int sizeY) {
@@ -34,10 +29,7 @@ public class PlayableCharacter {
         height = _image1.getHeight();
 
         x = sizeX/2 - 150;
-        y = sizeY-150-20;;
-
-        _sizeX = sizeX;
-        _sizeY = sizeY;
+        y = sizeY-150-30;
     }
 
     public void changeSpeed(float dx, float dy) {
@@ -91,28 +83,8 @@ public class PlayableCharacter {
 
     }
 
-    public void setWallJumpIndex(int wallJumpFrame){
-        this.wallJumpFrame = wallJumpFrame;
-    }
-
     public void setMaxFloor(int maxFloor) {
         this.maxFloor = maxFloor;
-    }
-
-    public void setFloorJumpIndex(int floorJumpFrame){
-        this.floorJumpFrame=floorJumpFrame;
-    }
-
-    public boolean retCanWallJump(){
-        return canWallJump;
-    }
-
-    public int retWallJumpIndex(){
-        return wallJumpFrame;
-    }
-
-    public int retFloorJumpIndex(){
-        return floorJumpFrame;
     }
 
     public int retMaxFloor() {

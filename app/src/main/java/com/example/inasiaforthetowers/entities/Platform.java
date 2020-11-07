@@ -16,19 +16,19 @@ public class Platform {
     public Platform(Bitmap image, int platformY, int platformX, int index, int borderWidth){
         this.platformIndex=index;
         this.platY=platformY;
-        this._platformImage = Bitmap.createScaledBitmap(image, 400, 30, true);
+        this._platformImage = Bitmap.createScaledBitmap(image, scale(platformX, borderWidth), 30, true);
 
         platformHeight = this._platformImage.getHeight();
         platformWidth = this._platformImage.getWidth();
 
-//        if(platformIndex == 0 || platformIndex % 50 == 0){
-//            platX = borderWidth;
-//        }
-//        else{
+        if(platformIndex == 0 || platformIndex % 50 == 0){
+            platX = borderWidth;
+        }
+        else{
             Random random = new Random();
             platX = random.nextInt(platformX - 2 * borderWidth - platformWidth)
                     + borderWidth;
-//        }
+        }
     }
 
     public void update(int newY){
@@ -41,13 +41,15 @@ public class Platform {
 
     }
 
-    private int scale(Bitmap image, int borderWidth){
+    private int scale(int displayWidth, int borderWidth){
 
         if(platformIndex == 0 || platformIndex % 50 == 0) {
-            return 300 - 2 * borderWidth;
+            return displayWidth - 2 * borderWidth;
         }
         else{
-            return platformWidth / (3 + platformIndex / 100);
+            Random random = new Random();
+            return random.nextInt(450) + 150;
+//            platformWidth / (3 + platformIndex / 100);
         }
 
     }
