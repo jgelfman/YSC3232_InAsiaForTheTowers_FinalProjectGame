@@ -6,11 +6,11 @@ import android.graphics.Rect;
 
 import java.util.Random;
 
-public class Platform extends Entities {
+public class Platform {
 
     private Bitmap _platformImage;
     private int platformIndex;
-    private int platY, platX;
+    public int platY, platX;
     private int platformWidth, platformHeight;
 
     public Platform(Bitmap image, int platformY, int platformX, int index, int borderWidth){
@@ -21,14 +21,14 @@ public class Platform extends Entities {
         platformHeight = this._platformImage.getHeight();
         platformWidth = this._platformImage.getWidth();
 
-        if(platformIndex == 0 || platformIndex % 50 == 0){
-            platX = borderWidth;
-        }
-        else{
+//        if(platformIndex == 0 || platformIndex % 50 == 0){
+//            platX = borderWidth;
+//        }
+//        else{
             Random random = new Random();
             platX = random.nextInt(platformX - 2 * borderWidth - platformWidth)
                     + borderWidth;
-        }
+//        }
     }
 
     public void update(int newY){
@@ -52,7 +52,6 @@ public class Platform extends Entities {
 
     }
 
-    @Override
     public Rect retRect(){
         return new Rect(platX, platY, platX + platformWidth, platY);
     }

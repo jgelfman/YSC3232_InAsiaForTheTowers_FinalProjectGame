@@ -2,31 +2,22 @@ package com.example.inasiaforthetowers.entities;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.util.Log;
 
-public class PlayableCharacter extends Entities {
+public class PlayableCharacter {
     private Bitmap _image1, _image2;
     public int x,y;
     private int _sizeX, _sizeY;
     public int width, height;
     private int totalY;
 
-    public float velocityX = 0; // px/s
-    public float velocityY = 0; // px/s
+    public float velocityX = 0; // px/ms
+    public float velocityY = 0; // px/ms
 
-    public static final float MAX_SPEED = 5; // px/s
-    public static final float TERMINAL_VELOCITY = 3; // px/s
-
-    public static final double GRAVITY = 0.05; // px/s^2
-    public static final double BREAKING = 0.1; // px/s^2
-
-    public PlayableCharacter(Bitmap image, int sizeX, int sizeY){
-
-    public static final float MAX_SPEED = 5; // px/s
-    public static final float TERMINAL_VELOCITY = 3; // px/s
-
-    public static final double GRAVITY = 0.05; // px/s^2
-    public static final double BREAKING = 0.1; // px/s^2
+    public static final float MAX_SPEED = 5; // px/ms
+    public static final float TERMINAL_VELOCITY = 3; // px/ms
+    public static final double BREAKING = 0.1; // px/ms^2
 
     public int wingCounter = 0;
     private boolean canWallJump;
@@ -36,14 +27,14 @@ public class PlayableCharacter extends Entities {
 
     public PlayableCharacter(Bitmap image1, Bitmap image2, int sizeX, int sizeY) {
 
-        _image1 = Bitmap.createScaledBitmap(image1, 400, 200, true);
-        _image2 = Bitmap.createScaledBitmap(image2, 400, 200, true);
+        _image1 = Bitmap.createScaledBitmap(image1, 300, 150, true);
+        _image2 = Bitmap.createScaledBitmap(image2, 300, 150, true);
 
         width = _image1.getWidth();
         height = _image1.getHeight();
 
-        x = sizeX/2 - 200;
-        y = sizeY-200-20;;
+        x = sizeX/2 - 150;
+        y = sizeY-150-20;;
 
         _sizeX = sizeX;
         _sizeY = sizeY;
@@ -67,7 +58,7 @@ public class PlayableCharacter extends Entities {
         }
     }
 
-    public void move(float time) {
+    public void move(float time, float gravity) {
         x += velocityX * time;
         y += velocityY * time;
         if (velocityX < 0) {
@@ -82,7 +73,7 @@ public class PlayableCharacter extends Entities {
             }
         }
 
-        velocityY += GRAVITY * time;
+        velocityY += gravity;
 
         if (velocityY > TERMINAL_VELOCITY) {
             velocityY = TERMINAL_VELOCITY;
@@ -124,13 +115,12 @@ public class PlayableCharacter extends Entities {
         return floorJumpFrame;
     }
 
-    public int retTotalY() {
-        return totalY;
-    }
-
     public int retMaxFloor() {
         return maxFloor;
     }
 
+    public Rect retRect(){
+        return new Rect(x + 100, y, x + width - 100, y + height);
+    }
 
 }

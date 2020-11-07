@@ -33,7 +33,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private Background _background;
     private PlayableCharacter _character;
-    private Platform _platform;
 
     private VelocityTracker velocityTracker = null;
 
@@ -44,6 +43,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private ArrayList<Border> _leftBorder;
     private ArrayList<Border> _rightBorder;
 
+    private Bitmap borderImg;
+    private Bitmap platformImg;
 
     public GameView(GameActivity gameActivity) {
         super(gameActivity);
@@ -73,18 +74,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         _leftBorder = new ArrayList<>();
         _rightBorder = new ArrayList<>();
         _platforms = new ArrayList<>();
-        for(int i = 0; i < this.activity.displaySize.y / 100 + 1; i++) {
+        platformImg = BitmapFactory.decodeResource(getResources(), R.drawable.platformskygarden);
 
+        for(int i = 0; i < this.activity.displaySize.y / 400 + 1; i++) {
             _platforms.add(
-                    new Platform(BitmapFactory.decodeResource(getResources(), R.drawable.platformskygarden),
-                    this.activity.displaySize.y - this.activity.displaySize.y / 4 - i * 100,
+                    new Platform(platformImg,
+                    this.activity.displaySize.y - 400 - i * 400,
                             this.activity.displaySize.x,
                             i,
-                            30));
+                            150));
         }
-        for(int i = this.activity.displaySize.y / BitmapFactory.decodeResource(getResources(), R.drawable.borderplants).getHeight(); i > -2; i--) {
-            _leftBorder.add(new Border(BitmapFactory.decodeResource(getResources(), R.drawable.borderplants), 0, i * BitmapFactory.decodeResource(getResources(), R.drawable.borderplants).getHeight()));
-            _rightBorder.add(new Border(BitmapFactory.decodeResource(getResources(), R.drawable.borderplants), this.activity.displaySize.x - BitmapFactory.decodeResource(getResources(), R.drawable.borderplants).getWidth(), i * BitmapFactory.decodeResource(getResources(), R.drawable.borderplants).getHeight()));
+        Bitmap border = BitmapFactory.decodeResource(getResources(), R.drawable.borderplants);
+        borderImg = Bitmap.createScaledBitmap(border, 100, border.getHeight() * 100 / border.getWidth(), true);
+        for(int i = this.activity.displaySize.y / borderImg.getHeight(); i > -2; i--) {
+            _leftBorder.add(new Border(borderImg, 0, i * borderImg.getHeight()));
+            _rightBorder.add(new Border(borderImg, this.activity.displaySize.x - 100, i * borderImg.getHeight()));
         }
     }
 
@@ -92,7 +96,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onTouchEvent(MotionEvent event) {
         int index = event.getActionIndex();
         int action = event.getActionMasked();
-        int pointerId = event.getPointerId(index);
 
         switch(action) {
             case MotionEvent.ACTION_DOWN:
@@ -147,8 +150,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas){
         super.draw(canvas);
         if(canvas != null){
+
             _background.draw(canvas);
-            _character.draw(canvas);
 
             for(Border box: _leftBorder) {
                 box.draw(canvas);
@@ -159,71 +162,83 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             for(Platform _platform: _platforms) {
                 _platform.draw(canvas);
             }
+            _character.draw(canvas);
         }
     }
 
     private boolean platformCollision(PlayableCharacter character, Platform platform){
         return Rect.intersects(character.retRect(), platform.retRect())
-                && character.retY() + character.retHeight() < platform.retY() + 20
-                && character.retWallJumpIndex() == 0 && character.retFloorJumpIndex() == 0;
+                && character.y < platform.platY
+                && character.velocityY > 0;
+//                && character.retWallJumpIndex() == 0 && character.retFloorJumpIndex() == 0;
     }
 
-    private boolean borderCollision(PlayableCharacter character, Border border){
-        return Rect.intersects(character.retRect(), border.retRect())
-                && character.retWallJumpIndex() == 0 && character.retCanWallJump();
-    }
+//    private boolean borderCollision(PlayableCharacter character, Border border){
+//        return Rect.intersects(character.retRect(), border.retRect());
+////                && character.retWallJumpIndex() == 0 && character.retCanWallJump();
+//    }
 
     public void update() {
         int gravity = 15;
+        int shift = 0;
 
-        this._background.shiftDown(gravity);
         this._character.changeSpeed(xVelocity, yVelocity);
-        this._character.move(1000 / 30);
+        this._character.move(1000 / 30, (float)gravity);
 
-        if (this._character.x < 0)
-            this._character.x = 0;
-        else if (this._character.x > this.activity.displaySize.x  -this._character.width)
-            this._character.x = this.activity.displaySize.x - this._character.width;
+        if (this._character.x < 100)
+            this._character.x = 100;
+        else if (this._character.x > this.activity.displaySize.x - this._character.width - 100)
+            this._character.x = this.activity.displaySize.x - this._character.width - 100;
 
         if (this._character.y > this.activity.displaySize.y - this._character.height)
             this._character.y = this.activity.displaySize.y - this._character.height;
 
+        if (this._character.y < this.activity.displaySize.y * 0.4) {
+            shift = (int)(this.activity.displaySize.y * 0.4 - this._character.y);
+            this._character.y = (int)(this.activity.displaySize.y * 0.4);
+        }
+
+        int delta = gravity + shift;
+
+        this._background.shiftDown(delta);
+
         for (int i = 0; i < _platforms.size(); i++) {
-            _platforms.get(i).update(_character.retDY());
+            _platforms.get(i).update(delta);
             if (platformCollision(_character, _platforms.get(i))) {
-                _character.setFloorJumpIndex(1);
+                _character.y = _platforms.get(i).platY - this._character.height;
+//                _character.setFloorJumpIndex(1);
                 if (_character.retMaxFloor() < _platforms.get(i).retIndex()) {
                     _character.setMaxFloor(_platforms.get(i).retIndex());
                 }
+                
             }
-            if (_platforms.get(i).retY() > this.activity.displaySize.y + 20) {
+            if (_platforms.get(i).platY > this.activity.displaySize.y + 20) {
                 _platforms.remove(i);
-                if(_platforms.get(_platforms.size() - 1).retIndex() + 1<=1000){
+//                if(_platforms.get(_platforms.size() - 1).retIndex() + 1<=1000){
                     _platforms.add(
-                            new Platform (BitmapFactory.decodeResource(getResources(),
-                                    R.drawable.borderplants),
-                                    _platforms.get(_platforms.size() - 1).retY() - 53 - _platforms.get(_platforms.size() - 1).retHeight(),
-                                    _platforms.get(_platforms.size() - 1).retX() - _platforms.get(_platforms.size() - 1).retHeight(),
-                                    _platforms.get(_platforms.size() - 1).retIndex() + 1, BitmapFactory.decodeResource(getResources(), R.drawable.borderplants).getWidth()));
-                }
+                            new Platform (platformImg,
+                                    _platforms.get(_platforms.size() - 1).platY - 400,
+                                    this.activity.displaySize.x,
+                                    _platforms.get(_platforms.size() - 1).retIndex() + 1, 150));
+//                }
             }
         }
 
         for (int i = 0; i < _leftBorder.size(); i++) {
-            _leftBorder.get(i).update(_character.retDY());
-            _rightBorder.get(i).update(_character.retDY());
-            if (borderCollision(_character, _leftBorder.get(i))
-                    || borderCollision(_character, _rightBorder.get(i)))
-                _character.setWallJumpIndex(1);
+            _leftBorder.get(i).update(delta);
+            _rightBorder.get(i).update(delta);
+//            if (borderCollision(_character, _leftBorder.get(i))
+//                    || borderCollision(_character, _rightBorder.get(i)))
+//                _character.setWallJumpIndex(1);
 
-            if (_leftBorder.get(i).retY() > this.activity.displaySize.y) {
+            if (_leftBorder.get(i).y > this.activity.displaySize.y) {
                 _leftBorder.remove(i);
                 _rightBorder.remove(i);
-                _leftBorder.add(new Border(BitmapFactory.decodeResource(getResources(), R.drawable.borderplants), 0,
-                        _leftBorder.get(_leftBorder.size() - 1).retY() - _leftBorder.get(_leftBorder.size() - 1).retHeight()));
-                _rightBorder.add(new Border(BitmapFactory.decodeResource(getResources(), R.drawable.borderplants),
-                        this.activity.displaySize.x - _rightBorder.get(_rightBorder.size() - 1).retWidth(),
-                        _rightBorder.get(_rightBorder.size() - 1).retY() - _rightBorder.get(_rightBorder.size() - 1).retHeight()));
+                _leftBorder.add(new Border(borderImg, 0,
+                        _leftBorder.get(_leftBorder.size() - 1).y - borderImg.getHeight()));
+                _rightBorder.add(new Border(borderImg,
+                        this.activity.displaySize.x - 100,
+                        _rightBorder.get(_rightBorder.size() - 1).y - borderImg.getHeight()));
             }
         }
         xVelocity = 0;
