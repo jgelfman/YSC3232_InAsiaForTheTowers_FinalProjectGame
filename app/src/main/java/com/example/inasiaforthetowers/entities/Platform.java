@@ -6,17 +6,17 @@ import android.graphics.Rect;
 
 import java.util.Random;
 
-public class Platform extends Entities {
+public class Platform {
 
     private Bitmap _platformImage;
     private int platformIndex;
-    private int platY, platX;
+    public int platY, platX;
     private int platformWidth, platformHeight;
 
     public Platform(Bitmap image, int platformY, int platformX, int index, int borderWidth){
         this.platformIndex=index;
         this.platY=platformY;
-        this._platformImage = Bitmap.createScaledBitmap(image, 400, 30, true);
+        this._platformImage = Bitmap.createScaledBitmap(image, scale(platformX, borderWidth), 30, true);
 
         platformHeight = this._platformImage.getHeight();
         platformWidth = this._platformImage.getWidth();
@@ -41,18 +41,19 @@ public class Platform extends Entities {
 
     }
 
-    private int scale(Bitmap image, int borderWidth){
+    private int scale(int displayWidth, int borderWidth){
 
         if(platformIndex == 0 || platformIndex % 50 == 0) {
-            return 300 - 2 * borderWidth;
+            return displayWidth - 2 * borderWidth;
         }
         else{
-            return platformWidth / (3 + platformIndex / 100);
+            Random random = new Random();
+            return random.nextInt(450) + 150;
+//            platformWidth / (3 + platformIndex / 100);
         }
 
     }
 
-    @Override
     public Rect retRect(){
         return new Rect(platX, platY, platX + platformWidth, platY);
     }
