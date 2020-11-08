@@ -1,20 +1,28 @@
 package com.example.inasiaforthetowers.views;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.VelocityTracker;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.view.VelocityTracker;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import com.example.inasiaforthetowers.GameActivity;
+import com.example.inasiaforthetowers.MenuActivity;
 import com.example.inasiaforthetowers.R;
 import com.example.inasiaforthetowers.entities.Background;
 import com.example.inasiaforthetowers.entities.Border;
@@ -233,10 +241,33 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         if (this._character.y > this.activity.displaySize.y - this._character.height) {
             thread.setRunning(false);
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    RelativeLayout layout = (RelativeLayout) layoutInflater.inflate(R.layout.activity_high_score, null);
+                    TextView score = (TextView)layout.findViewById(R.id.showScore);
+                    layout.findViewById(R.id.returnMain).setOnClickListener(new ReturnButtonListener());
+                    layout.setBackgroundColor(0xBB505050);
+                    score.setText("Your score: " + _character.retMaxFloor());
+
+                    _layout.addView(layout,
+                            new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.MATCH_PARENT));
+                }
+            });
         }
 
         xVelocity = 0;
         yVelocity = 0;
+    }
+
+    class ReturnButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            activity.startActivity(new Intent(activity, MenuActivity.class));
+            activity.finish();
+        }
     }
 
     class GameThread extends Thread {
