@@ -46,4 +46,19 @@ public class GameActivity extends Activity {
         startActivity(new Intent(this, MenuActivity.class));
         finish();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (MenuActivity.getMusicCounter() == 1) {
+            stopService(new Intent(this, Play_music.class));
+            }
+    }
+    protected void onResume() {
+        if (MenuActivity.getMusicCounter() == 1) {
+            startService(new Intent(this, Play_music.class));
+        }
+        super.onResume();
+    }
+
 }
